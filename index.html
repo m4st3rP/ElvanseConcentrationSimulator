@@ -63,20 +63,32 @@
           <ul id="dose-list"></ul>
         </aside>
         <main class="chart-container">
-          <div style="position: relative; height: 400px; width: 100%;">
+          <div style="position: relative; flex: 1; min-height: 0; min-width: 0; width: 100%;">
             <canvas id="level-chart"></canvas>
           </div>
-          <div id="stats" style="margin-top: 1.5rem; background: var(--bg); padding: 1rem; border-radius: 6px; border: 1px solid var(--border);">
-            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">Plot Statistics (<span id="stat-window">48</span>h Window)</h3>
-            <p style="margin:0.2rem 0; color: var(--text);"><strong>Maximum (Peak):</strong> <span id="stat-max">...</span></p>
-            <p style="margin:0.2rem 0; color: var(--text);"><strong>Minimum (Trough):</strong> <span id="stat-min">...</span></p>
-            <p style="margin:0.2rem 0; color: var(--text);"><strong>Peak-to-Trough Diff:</strong> <span id="stat-diff">...</span></p>
-            <p style="margin:0.6rem 0 0.2rem 0; color: var(--text);"><strong>Mean Concentration:</strong> <span id="stat-mean">...</span></p>
-            <p style="margin:0.2rem 0; color: var(--text);"><strong>Median Concentration:</strong> <span id="stat-median">...</span></p>
-            <p style="margin:0.6rem 0 0.2rem 0; color: var(--text);"><strong>Duration of Action:</strong> <span id="stat-duration">...</span></p>
+          <div id="stats" style="margin-top: 1rem; background: var(--bg); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--border); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; align-items: start;">
+            <h3 style="width: 100%; margin: 0 0 0.5rem 0; font-size: 1rem;">Plot Statistics (<span id="stat-window">48</span>h Window)</h3>
+            <p style="margin:0; font-size: 0.9rem; color: var(--text);"><strong>Max:</strong> <span id="stat-max">...</span></p>
+            <p style="margin:0; font-size: 0.9rem; color: var(--text);"><strong>Min:</strong> <span id="stat-min">...</span></p>
+            <p style="margin:0; font-size: 0.9rem; color: var(--text);"><strong>Diff:</strong> <span id="stat-diff">...</span></p>
+            <p style="margin:0; font-size: 0.9rem; color: var(--text);"><strong>Mean:</strong> <span id="stat-mean">...</span></p>
+            <p style="margin:0; font-size: 0.9rem; color: var(--text);"><strong>Median:</strong> <span id="stat-median">...</span></p>
+            <p style="margin:0; font-size: 0.9rem; color: var(--text);"><strong>Duration:</strong> <span id="stat-duration">...</span></p>
           </div>
         </main>
       </div>
+
+      <footer class="app-footer">
+        <div class="footer-content">
+          <strong>Sources & Disclaimers:</strong>
+          <p>This tool uses a 1-compartment extravascular model (Bateman function). It is for informational purposes only and is not medical advice.</p>
+          <ul>
+            <li>FDA Prescribing Information for Vyvanse (Lisdexamfetamine Dimesylate)</li>
+            <li>Ermer et al. (2010), "Pharmacokinetic variability of long-acting stimulants"</li>
+            <li>Steer et al. (2012), "Lisdexamfetamine Dimesylate Pharmacokinetics"</li>
+          </ul>
+        </div>
+      </footer>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

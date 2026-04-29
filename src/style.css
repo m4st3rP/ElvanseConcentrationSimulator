@@ -18,11 +18,25 @@ body {
   color: var(--text);
 }
 
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  #app {
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
 header {
   text-align: center;
-  padding: 2rem 1rem;
+  padding: 0.75rem 1rem;
   background: var(--panel-bg);
   border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 h1 { margin: 0 0 0.5rem; font-size: 1.5rem; }
@@ -31,23 +45,34 @@ p { margin: 0; color: #bcbcbc; font-size: 0.9rem; }
 .layout {
   display: flex;
   flex-direction: column;
-  max-width: 1200px;
+  width: 100%;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 2rem 1rem;
-  gap: 2rem;
+  padding: 1rem;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.sidebar {
+  flex: none;
+  width: 100%;
+  background: var(--panel-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  height: fit-content;
+  max-height: 100%;
+  overflow-y: auto;
 }
 
 @media (min-width: 768px) {
   .layout { flex-direction: row; }
-}
-
-.sidebar {
-  flex: 0 0 300px;
-  background: var(--panel-bg);
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-  height: fit-content;
+  .sidebar { 
+    flex: 0 0 clamp(260px, 25vw, 350px); 
+    width: auto;
+  }
 }
 
 .sidebar h2 { margin-top: 0; font-size: 1.2rem; }
@@ -84,8 +109,40 @@ button:hover { background: #047857; }
 
 .chart-container {
   flex: 1;
-  background: var(--panel-bg); border-radius: 8px; padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel-bg); border-radius: 8px; padding: 1rem;
   box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-  min-height: 400px;
-  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+.app-footer {
+  background: var(--panel-bg);
+  border-top: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  margin-top: auto;
+  color: #bcbcbc;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.footer-content {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.footer-content p {
+  margin: 0.25rem 0;
+}
+
+.footer-content ul {
+  margin: 0.25rem 0;
+  padding-left: 1.5rem;
+  color: #888;
+}
+
+.footer-content strong {
+  color: var(--text);
 }
