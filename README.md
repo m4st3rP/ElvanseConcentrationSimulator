@@ -1,5 +1,7 @@
 # Elvanse Concentration Simulator
 
+[Click here to use](https://m4st3rp.github.io/ElvanseConcentrationSimulator/)
+
 A web-based simulator to visualize the estimated concentration levels of Elvanse (Lisdexamfetamine) over time using Chart.js. Built with TypeScript and Vite.
 
 ## Features
