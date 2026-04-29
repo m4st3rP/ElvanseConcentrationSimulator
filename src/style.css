@@ -94,18 +94,20 @@ button {
 }
 button:hover { background: #047857; }
 
-#dose-list {
-  list-style: none; padding: 0; margin-top: 2rem;
+.dose-list {
+  list-style: none; padding: 0; margin-top: 1rem;
 }
-#dose-list li {
+.dose-list li {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 0.75rem 0; border-bottom: 1px solid var(--border);
+  padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+  gap: 1rem; /* adds spacing between text and button */
 }
-#dose-list button.remove-dose {
-  width: auto; background: none; color: #ef6464; padding: 0.25rem 0.5rem;
-  font-size: 0.8rem; border: 1px solid #ef6464;
+.dose-list button.remove-dose {
+  width: auto; background: none; color: #ef6464; padding: 0.2rem 0.4rem;
+  font-size: 0.75rem; border: 1px solid #ef6464;
+  margin-left: auto; /* pulls button to the far right */
 }
-#dose-list button.remove-dose:hover { background: #5c2020; color: #fca5a5; border-color: #fca5a5; }
+.dose-list button.remove-dose:hover { background: #5c2020; color: #fca5a5; border-color: #fca5a5; }
 
 .chart-container {
   flex: 1;

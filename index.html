@@ -47,33 +47,64 @@
 
           <hr style="border:0; border-top:1px solid var(--border); margin:1.5rem 0;" />
 
-          <h2>Daily Doses</h2>
-          <form id="dose-form">
-            <div class="input-group">
-              <label for="time">Time</label>
-              <input type="time" id="time" required value="08:00" />
-            </div>
-            <div class="input-group">
-              <label for="amount">Amount (mg)</label>
-              <input type="number" id="amount" required min="5" max="100" step="5" value="30" />
-            </div>
-            <button type="submit">Add Dose</button>
-          </form>
+          <div class="input-group">
+            <label style="display:flex; align-items:center; gap:0.5rem; font-weight:normal;">
+              <input type="checkbox" id="compare-mode" style="width:auto; margin:0;" />
+              <strong>Enable Compare Mode</strong>
+            </label>
+          </div>
 
-          <ul id="dose-list"></ul>
+          <div id="scenario-a-container">
+            <h2>Daily Doses (Scenario A)</h2>
+            <form id="dose-form-a" class="dose-form">
+              <div class="input-group">
+                <label for="time-a">Time</label>
+                <input type="time" id="time-a" required value="08:00" />
+              </div>
+              <div class="input-group">
+                <label for="amount-a">Amount (mg)</label>
+                <input type="number" id="amount-a" required min="5" max="100" step="5" value="30" />
+              </div>
+              <button type="submit">Add Dose</button>
+            </form>
+            <ul id="dose-list-a" class="dose-list"></ul>
+          </div>
+
+          <div id="scenario-b-container" style="display: none; margin-top: 1.5rem;">
+            <h2>Daily Doses (Scenario B)</h2>
+            <form id="dose-form-b" class="dose-form">
+              <div class="input-group">
+                <label for="time-b">Time</label>
+                <input type="time" id="time-b" required value="08:00" />
+              </div>
+              <div class="input-group">
+                <label for="amount-b">Amount (mg)</label>
+                <input type="number" id="amount-b" required min="5" max="100" step="5" value="30" />
+              </div>
+              <button type="submit">Add Dose</button>
+            </form>
+            <ul id="dose-list-b" class="dose-list"></ul>
+          </div>
         </aside>
         <main class="chart-container">
           <div style="position: relative; flex: 1; min-height: 0; min-width: 0; width: 100%;">
             <canvas id="level-chart"></canvas>
           </div>
-          <div id="stats" style="margin-top: 1rem; background: var(--bg); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--border); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; align-items: start;">
-            <h3 style="width: 100%; margin: 0 0 0.5rem 0; font-size: 1rem;">Plot Statistics (<span id="stat-window">48</span>h Window)</h3>
-            <p style="margin:0; font-size: 0.9rem; color: var(--text);"><strong>Max:</strong> <span id="stat-max">...</span></p>
-            <p style="margin:0; font-size: 0.9rem; color: var(--text);"><strong>Min:</strong> <span id="stat-min">...</span></p>
-            <p style="margin:0; font-size: 0.9rem; color: var(--text);"><strong>Diff:</strong> <span id="stat-diff">...</span></p>
-            <p style="margin:0; font-size: 0.9rem; color: var(--text);"><strong>Mean:</strong> <span id="stat-mean">...</span></p>
-            <p style="margin:0; font-size: 0.9rem; color: var(--text);"><strong>Median:</strong> <span id="stat-median">...</span></p>
-            <p style="margin:0; font-size: 0.9rem; color: var(--text);"><strong>Duration:</strong> <span id="stat-duration">...</span></p>
+          <div id="stats" style="margin-top: 1rem; background: var(--bg); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--border); overflow-x: auto;">
+            <h3 style="margin: 0 0 0.5rem 0; font-size: 1rem;">Plot Statistics (<span id="stat-window">48</span>h Window)</h3>
+            <table style="width: 100%; text-align: left; border-collapse: collapse; font-size: 0.9rem; color: var(--text);">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border);">
+                  <th style="padding: 0.5rem 0;">Metric</th>
+                  <th style="padding: 0.5rem 0;">Scenario A</th>
+                  <th id="th-scenario-b" style="padding: 0.5rem 0; display: none;">Scenario B</th>
+                  <th id="th-difference" style="padding: 0.5rem 0; display: none;">Difference (B - A)</th>
+                </tr>
+              </thead>
+              <tbody id="stats-tbody">
+                <!-- Rows injected via JS -->
+              </tbody>
+            </table>
           </div>
         </main>
       </div>
