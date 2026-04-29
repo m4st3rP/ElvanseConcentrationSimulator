@@ -3,7 +3,6 @@ import Chart from 'chart.js/auto';
 
 // --- PK Model Parameters ---
 const KA = 1.386;       // Absorption rate (hr^-1)
-const KE = 0.063;       // Elimination rate (hr^-1)
 const T_LAG = 0.75;     // Lag time (hr)
 const BIO_FA = 0.67;    // ng/mL per mg dose
 
