@@ -244,11 +244,25 @@ function updateChart() {
         
         ctx.save();
         ctx.beginPath();
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = '#ef6464';
         ctx.lineWidth = 2;
         ctx.moveTo(xPos, top);
         ctx.lineTo(xPos, bottom);
         ctx.stroke();
+
+        const currentDataIdx = Math.floor(currentTimeIndex);
+        if (dataA[currentDataIdx] !== undefined) {
+          let text = `${dataA[currentDataIdx].toFixed(1)} ng/mL`;
+          if (compareMode && dataB[currentDataIdx] !== undefined) {
+             text = `A: ${text} | B: ${dataB[currentDataIdx].toFixed(1)} ng/mL`;
+          }
+          
+          ctx.fillStyle = '#ef6464';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText(`Current: ${text}`, xPos, top - 4);
+        }
+
         ctx.restore();
       }
     }
@@ -262,6 +276,11 @@ function updateChart() {
     },
     plugins: [currentTimePlugin],
     options: {
+      layout: {
+        padding: {
+          top: 20
+        }
+      },
       responsive: true,
       maintainAspectRatio: false,
       scales: {
