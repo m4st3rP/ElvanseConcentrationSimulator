@@ -308,6 +308,31 @@ function renderAllDoseLists() {
   }
 }
 
+interface AppConfig {
+  dosesA: Dose[];
+  dosesB: Dose[];
+  compareMode: boolean;
+  startFresh: boolean;
+  halfLife: number;
+  daysShown: number;
+  threshold: number;
+}
+
+function getSettingsArray(): any[] {
+  // Use a very compact array structure to minimize JSON string length
+  // Format: [ dosesA, dosesB, compareMode, startFresh, halfLife, daysShown, threshold ]
+  // Doses are stored as [time, amount] arrays omitting the random IDs
+  return [
+    dosesA.map(d => [d.time, d.amount]),
+    dosesB.map(d => [d.time, d.amount]),
+    compareMode ? 1 : 0,
+    (document.getElementById('start-fresh') as HTMLInputElement).checked ? 1 : 0,
+    Number((document.getElementById('half-life-input') as HTMLInputElement).value),
+    Number((document.getElementById('days-shown-input') as HTMLInputElement).value),
+    Number((document.getElementById('threshold-input') as HTMLInputElement).value),
+  ];
+}
+
 function saveData() {
   localStorage.setItem('elvanse_doses', JSON.stringify(dosesA));
   localStorage.setItem('elvanse_doses_b', JSON.stringify(dosesB));
@@ -315,23 +340,58 @@ function saveData() {
 }
 
 function loadData() {
-  const savedA = localStorage.getItem('elvanse_doses');
-  if (savedA) {
-    try { dosesA = JSON.parse(savedA); } catch (e) { dosesA = []; }
+  const urlParams = new URLSearchParams(window.location.search);
+  const configParam = urlParams.get('config');
+
+  let configToLoad: Partial<AppConfig> = {};
+
+  if (configParam) {
+    try {
+      const parsedConfig = JSON.parse(atob(configParam));
+      configToLoad = {
+        dosesA: parsedConfig[0]?.map((d: any, i: number) => ({ id: `a_${Date.now()}_${i}`, time: d[0], amount: d[1] })),
+        dosesB: parsedConfig[1]?.map((d: any, i: number) => ({ id: `b_${Date.now()}_${i}`, time: d[0], amount: d[1] })),
+        compareMode: !!parsedConfig[2],
+        startFresh: !!parsedConfig[3],
+        halfLife: parsedConfig[4],
+        daysShown: parsedConfig[5],
+        threshold: parsedConfig[6]
+      };
+      // Optionally remove from URL visually
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } catch (e) {
+      console.error("Failed to parse URL config", e);
+    }
   } else {
-    dosesA = [{ id: Date.now().toString(), time: "08:00", amount: 30 }];
+    const savedA = localStorage.getItem('elvanse_doses');
+    const savedB = localStorage.getItem('elvanse_doses_b');
+    const savedCompare = localStorage.getItem('elvanse_compare_mode');
+    
+    if (savedA) try { configToLoad.dosesA = JSON.parse(savedA); } catch(e){}
+    if (savedB) try { configToLoad.dosesB = JSON.parse(savedB); } catch(e){}
+    if (savedCompare) try { configToLoad.compareMode = JSON.parse(savedCompare); } catch(e){}
   }
-  
-  const savedB = localStorage.getItem('elvanse_doses_b');
-  if (savedB) {
-    try { dosesB = JSON.parse(savedB); } catch (e) { dosesB = []; }
-  } else {
-    dosesB = [{ id: Date.now().toString(), time: "10:00", amount: 20 }];
+
+  // Load arrays & bools
+  dosesA = configToLoad.dosesA || [{ id: Date.now().toString(), time: "08:00", amount: 30 }];
+  dosesB = configToLoad.dosesB || [{ id: Date.now().toString(), time: "10:00", amount: 20 }];
+  compareMode = configToLoad.compareMode || false;
+
+  // Sync DOM elements if values were present in the config
+  if (configToLoad.startFresh !== undefined) {
+    (document.getElementById('start-fresh') as HTMLInputElement).checked = configToLoad.startFresh;
   }
-  
-  const savedCompare = localStorage.getItem('elvanse_compare_mode');
-  if (savedCompare) {
-    try { compareMode = JSON.parse(savedCompare); } catch (e) { compareMode = false; }
+  if (configToLoad.halfLife !== undefined) {
+    (document.getElementById('half-life-input') as HTMLInputElement).value = configToLoad.halfLife.toString();
+    (document.getElementById('half-life-slider') as HTMLInputElement).value = configToLoad.halfLife.toString();
+  }
+  if (configToLoad.daysShown !== undefined) {
+    (document.getElementById('days-shown-input') as HTMLInputElement).value = configToLoad.daysShown.toString();
+    (document.getElementById('days-shown-slider') as HTMLInputElement).value = configToLoad.daysShown.toString();
+  }
+  if (configToLoad.threshold !== undefined) {
+    (document.getElementById('threshold-input') as HTMLInputElement).value = configToLoad.threshold.toString();
+    (document.getElementById('threshold-slider') as HTMLInputElement).value = configToLoad.threshold.toString();
   }
 }
 
@@ -435,3 +495,19 @@ compareModeCheckbox.checked = compareMode;
 document.getElementById('scenario-b-container')!.style.display = compareMode ? 'block' : 'none';
 renderAllDoseLists();
 updateChart();
+
+document.getElementById('share-link-btn')?.addEventListener('click', () => {
+  const config = getSettingsArray();
+  // Stringify the array to JSON and then encode it to base64
+  const base64Config = btoa(JSON.stringify(config));
+  
+  const url = new URL(window.location.href);
+  url.searchParams.set('config', base64Config);
+  
+  navigator.clipboard.writeText(url.toString()).then(() => {
+    const btn = document.getElementById('share-link-btn')!;
+    const originalText = btn.innerText;
+    btn.innerText = '✅ Copied to clipboard!';
+    setTimeout(() => btn.innerText = originalText, 2000);
+  });
+});
