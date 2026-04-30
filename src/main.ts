@@ -230,12 +230,37 @@ function updateChart() {
     });
   }
 
+  const now = new Date();
+  const currentHourOfFirstDay = now.getHours() + (now.getMinutes() / 60);
+  const currentTimeIndex = currentHourOfFirstDay * pointsPerHour;
+
+  const currentTimePlugin = {
+    id: 'currentTime',
+    afterDraw(chart: any) {
+      const { ctx, chartArea: { top, bottom }, scales: { x } } = chart;
+      
+      if (currentTimeIndex >= x.min && currentTimeIndex <= x.max) {
+        const xPos = x.getPixelForValue(currentTimeIndex);
+        
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
+        ctx.moveTo(xPos, top);
+        ctx.lineTo(xPos, bottom);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+  };
+
   chartInstance = new Chart(ctx, {
     type: 'line',
     data: {
       labels,
       datasets
     },
+    plugins: [currentTimePlugin],
     options: {
       responsive: true,
       maintainAspectRatio: false,
